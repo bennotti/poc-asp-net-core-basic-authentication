@@ -12,26 +12,15 @@ namespace SampleProject.Infrastructure.Authorization.Handle
 {
     public class BasicAuthorizationHandler : AuthorizationHandler<BasicAuthorizationRequirement>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public BasicAuthorizationHandler(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, BasicAuthorizationRequirement requirement)
         {
-            if (_httpContextAccessor == null) {
-                context.Fail();
-                return;
-            }
-
-            if (!_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            if (!context.User.Identity.IsAuthenticated)
             {
                 context.Fail();
                 return;
             }
 
-            var userIdentity = _httpContextAccessor.HttpContext.User.Identity;
+            var userIdentity = context.User.Identity;
 
             context.Succeed(requirement);
 
