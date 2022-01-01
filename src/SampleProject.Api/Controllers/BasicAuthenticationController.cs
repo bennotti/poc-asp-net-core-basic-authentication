@@ -25,6 +25,17 @@ namespace SampleProject.Api.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        [Route("without-validate")]
+        public BasicValidateResponseDto WhithoutValidate()
+        {
+            _logger.LogInformation("Basic auth sem validação");
+            return new BasicValidateResponseDto
+            {
+                Msg = "Basic auth sem validação!"
+            };
+        }
+
         [HttpPost]
         [Route("validate")]
         [Authorize]
