@@ -32,20 +32,17 @@ namespace SampleProject.Api
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Basic", (policy) => {
-                    policy.RequireAuthenticatedUser();
-                    policy.Requirements.Add(new BasicAuthorizationRequirement());
-                });
-
-                options.DefaultPolicy = options.GetPolicy("Basic");
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddAuthenticationSchemes("Basic")
+                    .AddRequirements(new BasicAuthorizationRequirement())
+                    .Build();
             });
 
             services.AddSingleton<IAuthorizationHandler, BasicAuthorizationHandler>();
 
-            services.AddAuthentication(options => {
-                options.DefaultScheme = "SampleProjectAuthentication";
-            })
-            .AddScheme<AuthenticationSchemeOptions, SampleProjectAuthenticationHandler>("SampleProjectAuthentication", null);
+            services.AddAuthentication("Basic")
+            .AddScheme<AuthenticationSchemeOptions, SampleProjectAuthenticationHandler>("Basic", null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
